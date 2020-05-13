@@ -1,30 +1,21 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter);
+const Home =  resolve => require.ensure([], () => resolve(require('@/components/Home')),'HomeWebpack')
+const qqlogin =  resolve => require.ensure([], () => resolve(require('@/components/qqlogin')),'QQloginWebpack')
+Vue.use(Router)
 
-const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
-];
-
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
-});
-
-export default router;
+export default new Router({
+	mode: process.env.VUE_APP_URLENV  == 'test'?'hash':'history',
+	routes: [{
+			path: '/',
+			name: 'Home',
+			component: Home
+		},
+		{
+			path: '/memo/qqlogin',
+			name: 'qqlogin',
+			component: qqlogin
+		}
+	]
+})

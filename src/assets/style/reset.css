@@ -1,0 +1,135 @@
+@charset "utf-8";
+
+/* CSS Document */
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+	padding: 0;
+	margin: 0;
+}
+
+fieldset,
+img {
+	border: 0;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+ol,
+ul {
+	list-style: none;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+strong,
+th,
+var {
+	font-weight: normal;
+	font-style: normal;
+}
+
+caption,
+th {
+	text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: normal;
+	font-size: 100%;
+}
+
+q:before,
+q:after {
+	content: '';
+}
+
+abbr,
+acronym {
+	border: 0;
+}
+
+a {
+	text-decoration: none
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	overflow: hidden;
+}
+
+
+@media (max-width :768px) {
+	.memo-wrapper {
+		padding: 2px;
+		margin-top: 0;
+		width: 50%;
+	}
+	/* "第三方登陆" */
+	.other span:nth-child(1){
+		display: none;
+	}
+}
+
+@media (min-width :768px) and (max-width :992px) {
+	.memo-wrapper {
+		width: 33.3%;
+	}
+}
+
+@media (min-width:992px) and (max-width :1200px) {
+	.memo-wrapper {
+		width: 25%;
+	}
+
+}
+
+@media (min-width :1200px) {
+	.memo-wrapper {
+		width: 25%;
+	}
+}
+
+.icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.15em;
+	fill: currentColor;
+	overflow: hidden;
+}
