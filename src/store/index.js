@@ -39,7 +39,7 @@ export default new Vuex.Store({
 		userName: localStorage.userName || '',
 		isUp:false,			//降序还是升序
 		taskData:JSON.parse(localStorage.taskData)||{},		//task数据
-		showCalendarTask:false,		//是否显示日历任务
+		showCalendarTask:false,		//是否显示日历任务组件
 		upload: 'http://localhost:3000/upload'
 	},
 	mutations: {

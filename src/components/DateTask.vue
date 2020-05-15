@@ -200,7 +200,7 @@
 					this.$message1('不可为空', 'wangning')
 					return
 				}
-				var date = `${this.month}/${day}`
+				var date = `${this.year}/${this.month}/${day}`
 				console.log(this.taskData, this.taskData.length)
 				this.taskData[date] = this.taskInput
 				this.$store.commit('setTaskData', this.taskData)
@@ -260,10 +260,10 @@
 				return function(day) {
 					for (var key in this.taskData) {
 						var split = key.split('/')
-						var taskKyeMonth = split[0]
-						var taskKyeDay = split[1]
-
-						if (taskKyeMonth == this.month && taskKyeDay == day) {
+						var taskKyeYear = split[0]
+						var taskKyeMonth = split[1]
+						var taskKyeDay = split[2]
+						if (taskKyeYear == this.year && taskKyeMonth == this.month && taskKyeDay == day) {
 							return this.taskData[key]
 						}
 					}
@@ -377,11 +377,13 @@
 				//含有task任务的日期
 				.have_task {
 					background-color: #ffbb00;
+					// background-color: #26a65b;
 				}
 
 				//在本日之前的task
 				.before_task {
 					background-color: #fff0f0;
+					// background-color: #d0d0d0;
 				}
 
 				.have_task:hover .show_task_text {
