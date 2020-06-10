@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '../store/index.js'
+import router from '../router/index.js'
 import {
 	Message
 } from 'element-ui'
@@ -57,7 +58,7 @@ axios.interceptors.response.use(
 					message: 'token无效，请重试!',
 					type: 'error',
 				});
-			}else{
+			} else {
 				Message({
 					showClose: false,
 					duration: 2000,
@@ -65,10 +66,10 @@ axios.interceptors.response.use(
 					type: 'error',
 				});
 			}
-			store.state.userName?store.state.userName='':store.state.userName,
-			// console.log(localStorage.userName,store.state)	//为什locaoStorage里userName有值，但store.state里面没有
-			store.commit('setUserName', '')
-			store.commit('setToken','')
+			store.state.userName ? store.state.userName = '' : store.state.userName,
+				// console.log(localStorage.userName,store.state)	//为什locaoStorage里userName有值，但store.state里面没有
+				store.commit('setUserName', '')
+			store.commit('setToken', '')
 		} else if (code == -1) {
 			Message({
 				showClose: false,
@@ -88,15 +89,24 @@ axios.interceptors.response.use(
 				message: '请求超时请刷新后重试!',
 				type: 'error',
 			});
+		} else if (err.message.indexOf('404') != -1) {
+			router.replace({
+				name: '404'
+			})
+			// Message({
+			// 	showClose: false,
+			// 	duration: 2000,
+			// 	message: '跳转至404页面!',
+			// 	type: 'error',
+			// });
+		} else if (err.message.indexOf('403') != -1) {
+			Message({
+				showClose: false,
+				duration: 2000,
+				message: '您无权进行该操作，请尝试登陆!',
+				type: 'error',
+			});
 		}
-		// else {
-		// 	Message({
-		// 		showClose: false,
-		// 		duration: 1000,
-		// 		message: '请求失败,请重试!',
-		// 		type: 'error',
-		// 	})
-		// }
 
 		return Promise.reject(err)
 	})

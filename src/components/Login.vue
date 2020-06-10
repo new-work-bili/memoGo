@@ -52,7 +52,9 @@
 				'setLogin',
 				'setToken',
 				'setUserName',
-				'initItem'
+				'initItem',
+				'setlabelArr',
+				'setTaskData'
 			]),
 			close() {
 				this.setLogin(false)
@@ -102,8 +104,20 @@
 			init(){
 				if(this.userName){
 					postTable('/init/',{userName:this.userName}).then((res)=>{
+						//memo数据
 						this.initItem(res.data.userData)
-						console.log('当前:',localStorage.memoItem)
+						let _taskData = res.data.taskData
+						//task数据
+						this.setTaskData(_taskData)
+						//每次init接收新token
+						if(res.data.token){
+							this.setToken(res.data.token)
+						}
+						console.log('登陆init token:',res.data.token)
+						//自定义的label信息
+						if(res.data.labelData&&Object.values(res.data.labelData).length !=0){
+							this.setlabelArr(res.data.labelData)
+						}
 						
 					}).catch((err)=>{
 					})

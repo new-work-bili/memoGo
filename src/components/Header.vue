@@ -3,7 +3,7 @@
 		<!-- bootstrap navbar -->
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
-				<!-- 移动端导航栏 -->  
+				<!-- 移动端导航栏 -->
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
 					 :aria-expanded="false">
@@ -12,7 +12,8 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<span class="login" v-show="!this.$store.state.userName"><span @click="login">登陆</span> || <span @click="registe">注册</span></span>
+					<span class="login" v-show="!this.$store.state.userName"><span @click="login" class="login_login">登陆</span><!-- || -->
+						<span @click="registe" class="login_registe">注册</span></span>
 					<div class="other col-xs-6 col-sm-3 col-md-3 col-lg-2" v-show="!this.$store.state.userName">
 						<span>第三方登陆:</span>
 						<svg class="icon" aria-hidden="true" @click="QQclick">
@@ -24,7 +25,7 @@
 							</svg>
 							<span class="toding" v-show="toding">开发中</span>
 						</span>
-						
+
 					</div>
 					<span class="login" v-show="this.$store.state.userName"><span>{{this.$store.state.userName}}</span> || <span
 						 @click="logout" class="logout">注销</span></span>
@@ -40,17 +41,42 @@
 							</transition>
 						</li>
 						<li @click="clickMark"><a>新建</span></a></li>
-						<!-- 筛选 -->
-						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{label}}
+						<!-- 筛选—_手机端 -->
+						<li class="dropdown all_li">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" @click="showAll = !showAll">{{label}}
 								<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
-								<li role="separator" class="divider"></li>
-								<li @click="clickFilter('生活')"><a>生活<span>{{this.liveLength}}</span></a></li>
-								<li @click="clickFilter('学习')"><a>学习<span>{{this.studyLength}}</span></a></li>
-								<li @click="clickFilter('工作')"><a>工作<span>{{this.workLength}}</span></a></li>
-							</ul>
+								<ul class="dropdown-menu">
+									<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
+									<li role="separator" class="divider"></li>
+									<li v-for="value in testArr" @click="clickFilter(value)">
+										<a>{{value}}<span class="phone_label_length">{{labelLength(value)}}</span></a>
+										<!-- 删除 -->
+										<span class="phone_delet_label iconfont icon-shanchu" @click.stop="deletLabel(value)" v-if="isNewlabel(value)"></span>
+									</li>
+								</ul>
+						</li>
+						<!-- 筛选—_电脑端 -->
+						<li class="_all_li">
+							<a @click="showAll = !showAll;show_add_input = false">{{label}}<span class="caret"></span></a>
+							<transition name="el-zoom-in-top">
+								<div v-show="showAll" class="all">
+									<ul>
+										<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
+										<hr>
+										<!-- 循环出类别列表 -->
+										<li v-for="value in testArr" @click="clickFilter(value)">
+											<a>{{value}}<span class="pc_label_length">{{labelLength(value)}}</span></a>
+											<!-- 删除 -->
+											<span class="delet_label iconfont icon-shanchu" @click.stop="deletLabel(value)" v-if="isNewlabel(value)"></span>
+										</li>
+										<!-- 添加类别 -->
+										<li class="add" @click="addLabel">
+											<a v-show="!show_add_input">+</a>
+											<input type="text" v-show="show_add_input" class="add_input" @keyup.enter="addInput" v-model="addInputtData">
+										</li>
+									</ul>
+								</div>
+							</transition>
 						</li>
 						<!-- 排序 -->
 						<li @click="changeUp"><a>按创建时间 <span class="glyphicon glyphicon-arrow-up" v-show="up"></span><span class="glyphicon glyphicon-arrow-down"
@@ -74,6 +100,10 @@
 		mapState,
 		mapMutations
 	} from 'vuex';
+	import {
+		postTable,
+		getTable
+	} from '../http/func.js'
 	import DateTask from './DateTask.vue'
 	export default {
 		data() {
@@ -82,11 +112,15 @@
 				sort: '按创建时间',
 				up: false, //排序是升序还是降序
 				inputText: '',
-				toding: false ,//显示开发中字样
-				ShowCalendarTask:false
+				toding: false, //显示开发中字样
+				ShowCalendarTask: false,
+				showAll:false		,//显示全部分类
+				show_add_input:false	,//显示添加分类的表单
+				addInputtData:'',			//添加的新类别内容
+				// testArr:['生活','学习','工作']
 			}
 		},
-		components:{
+		components: {
 			DateTask
 		},
 		methods: {
@@ -104,8 +138,52 @@
 				'setUserName',
 				'setToken',
 				'setIsUP',
-				'setShowCalendarTask'
+				'setShowCalendarTask',
+				'setlabelArr'
 			]),
+			//点击 +
+			addLabel(){
+				this.show_add_input = true
+				this.$nextTick(()=>{
+					$('.add_input').focus()
+				})
+			},
+			//回车,添加类别
+			addInput(){
+				var _labelArr = this.labelArr
+				if(this.addInputtData.length>=5){
+					this.$message1('长度过长!','warning')
+				}else{
+					this.show_add_input = false
+					_labelArr.push(this.addInputtData)
+					this.setlabelArr(_labelArr)
+					postTable('/changeLabel/',{labelArr:this.labelArr}).then((res)=>{
+						
+					})
+				}
+				this.addInputtData = ''
+			},
+			//删除对应的
+			deletLabel(label){
+				var _labelArr = this.labelArr
+				console.log('删除时遍历的_labelArr:',_labelArr)
+				_labelArr.forEach((item,index)=>{
+					console.log(item)
+					if(item == label){
+						_labelArr.splice(index,1)
+					}
+					
+				})
+				console.log('删除之后赋值的_labelArr:',_labelArr)
+				this.setlabelArr(_labelArr)
+				console.log('localStorage.labelData:',localStorage.labelData)
+				postTable('/changeLabel/',{labelArr:_labelArr}).then((res)=>{
+					
+				})
+				
+				//删除对应标签的所有memo
+				
+			},
 			//点击新建
 			clickMark() {
 				this.setIsNew(true) //表示这是新建
@@ -123,12 +201,14 @@
 				$('#bs-example-navbar-collapse-1').collapse('hide')
 			},
 			//点击显示日历任务
-			showCalendarTask(){
+			showCalendarTask() {
 				this.setShowCalendarTask()
 				this.ShowCalendarTask = !this.ShowCalendarTask
 			},
 			//筛选选项
 			clickFilter(data) {
+				console.log('clickFilter')
+				this.showAll = !this.showAll
 				this.label = data
 				this.filterMemoItem(data)
 				//关闭头部导航栏
@@ -159,9 +239,11 @@
 			},
 			//注销
 			logout() {
-				this.setUserName('')
-				this.setToken('')
-				this.$message1('注销成功!', 'success')
+				postTable('/login/logout/').then(() => {})
+					.finally(() => {
+						this.setUserName('')
+						this.setToken('')
+					})
 			},
 			//QQ登陆
 			QQclick() {
@@ -173,15 +255,15 @@
 			//微信
 			weixin() {
 				// this.toding = true
-				this.$message1('开发中','warning')
+				this.$message1('开发中', 'warning')
 			},
 			leaveWeixin() {
 				this.toding = false
 			},
 			//绑定快捷键
-			hotKey(){
+			hotKey() {
 				var keyCode = window.event.keyCode ? window.event.keyCode : window.event.which
-				if((window.event.shiftKey)&&(keyCode == 67)){
+				if ((window.event.shiftKey) && (keyCode == 67)) {
 					this.clickMark()
 				}
 			}
@@ -195,38 +277,52 @@
 				'isNew',
 				'isLogin',
 				'userName',
-				'isShowNav'
+				'isShowNav',
+				'labelArr'
 			]),
 			//分类是学习的数量
-			studyLength: function() {
-				var length = JSON.parse(localStorage.memoItem).filter((item) => {
-					return item.label == "学习"
-				})
-				return length.length
-			},
-			workLength: function() {
-				var length = JSON.parse(localStorage.memoItem).filter((item) => {
-					return item.label == "工作"
-				})
-				return length.length
-			},
-			liveLength: function() {
-				var length = JSON.parse(localStorage.memoItem).filter((item) => {
-					return item.label == "生活"
-				})
-				return length.length
+			labelLength:function(){
+				return function(label){
+					var length = JSON.parse(localStorage.memoItem).filter((item) => {
+						return item.label == label
+					})
+					return length.length
+				}
 			},
 			Length: function() {
-				return this.studyLength + this.workLength + this.liveLength
+				var length = 0
+				this.testArr.forEach((item)=>{
+					length += this.labelLength(item)
+				})
+				return length
+			},
+			//判断是否是用户新增的label
+			isNewlabel:function(){
+				var oldArr = ['学习','生活','工作']
+				return function(label){
+					if(oldArr.indexOf(label)==-1){
+						return true
+					}else{
+						return false
+					}
+				}
 			},
 			//return头部导航栏标记
 			is: function() {
 				return this.isShowNav
+			},
+			//遍历自定义的label数组
+			testArr:function(){
+				var arr = ['生活','学习','工作']
+				if(this.labelArr.length!=0){
+					return this.labelArr
+				}
+				return arr
 			}
 		},
 		mounted() {},
 		created() {
-			document.addEventListener('keydown',this.hotKey)
+			document.addEventListener('keydown', this.hotKey)
 			//焦距表單
 		},
 		watch: {
@@ -234,8 +330,8 @@
 				console.log($(this.$refs.nav))
 				$(this.$refs.nav).collapse()
 			},
-			
-			
+
+
 		},
 
 	}
@@ -245,10 +341,29 @@
 	.login {
 		position: absolute;
 		top: 14px;
-		color: #77778c;
+		// font-size: 1.2rem;
+		// color: #77778c;
+		color: #333;
 
 		span:hover {
 			cursor: pointer;
+		}
+
+		.login_login {
+			// color: #35d435;
+			font-weight: 600;
+			padding: 5px 10px;
+			background-color: #35d435;
+		}
+
+		.login_registe {
+			font-weight: 600;
+			padding: 3px 7px;
+			margin-left: 5px;
+			border: 2px solid #35d435;
+			box-sizing: border-box;
+			color: #35d435;
+			// text-indent: 20px;
 		}
 
 		.logout {
@@ -278,8 +393,9 @@
 		.icon:hover {
 			cursor: pointer;
 		}
+
 		//装微信图标
-		.weixin_wrapper{
+		.weixin_wrapper {
 			// padding: 0 35px 0 0 ;
 			overflow: visible;
 			position: relative;
@@ -313,14 +429,99 @@
 			border-style: solid;
 			border-color: transparent transparent #f3cb85 transparent;
 		}
-		
+
 	}
 
-	.navbar-right>li:hover{
+	.navbar-right>li:hover {
 		cursor: pointer;
 	}
-	.dateTask_click_down{
+
+	.dateTask_click_down {
 		background-color: #e7e7e7;
+	}
+	
+	//全部分类列表
+	.all{
+		position: absolute;
+		left: -35px;
+		width: 135px;
+		min-width: 100px;
+		border: 1px solid rgba(0,0,0,.15);
+		box-shadow:0 6px 12px rgba(0,0,0,.175);
+		background-color: #fff;
+		&>ul>li{
+			text-align: center;
+			&:hover{
+				text-decoration: none;
+				background-color:#e7e7e7;
+			}
+			a{
+				color: #777;
+				&:hover{
+					text-decoration: none;
+				}
+			}
+		}
+		.add{
+			font-size: 1.25rem;
+			font-weight: 900;
+			.add_input{
+				width: 100%;
+				box-sizing: border-box;
+			}
+		}
+		.delet_label{
+			position: absolute;
+			right: 5px;
+			// top: 0;
+			font-size: 1.15rem;
+			color: #dd001b;
+			&:hover {
+				color: red;
+			}
+		}
+		
+		hr{
+			margin: 4px 0;
+		}
+	}
+	.pc_label_length,.phone_label_length{
+		font-weight: 900;
+		margin-left: 4px;
+	}
+	//手机端label
+	.all_li{
+		.phone_delet_label{
+			color: #dd001b;
+			font-size: 1.35rem;
+			position: absolute;
+			right: 15px;
+		}
+		li{
+			display: flex;
+			// justify-content: center;
+			// align-items: center;
+		}
+	
+	}
+	
+	@media screen and (min-width: 768px){
+		._all_li{
+			position: relative;
+			display: block;
+		}
+		.all_li{
+			display: none;
+		}
+	}
+	@media screen and (max-width: 768px){
+		._all_li{
+			position: relative;
+			display: none;
+		}
+		.all_li{
+			display: block;
+		}
 	}
 </style>
 

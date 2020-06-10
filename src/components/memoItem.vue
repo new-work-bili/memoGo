@@ -40,8 +40,14 @@
 </template>
 
 <script>
-	import {mapState,mapMutations} from 'vuex'
-	import {postTable,getTable} from '../http/func.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
+	import {
+		postTable,
+		getTable
+	} from '../http/func.js'
 	export default {
 		data() {
 			return {
@@ -82,35 +88,39 @@
 			setTop(item) {
 				this.setTopStore([item.type, item.time])
 				//更新服务器数据
-				postTable('/setTop/',{item:item})
+				// if(this.userName){
+				postTable('/setTop/', {
+					item: item
+				})
+				// }
 			},
 			//转成日期形式
 			add0(m) {
-			  return m < 10 ? "0" + m : m;
+				return m < 10 ? "0" + m : m;
 			},
 			//时间戳-->2020-04-27 22:38:21
 			changeTime(timestamp) {
-			  //时间戳是整数，否则要parseInt转换
-			  var time = new Date(timestamp);
-			  var y = time.getFullYear();
-			  var m = time.getMonth() + 1;
-			  var d = time.getDate();
-			  var h = time.getHours();
-			  var mm = time.getMinutes();
-			  var s = time.getSeconds();
-			  return (
-			    y +
-			    "-" +
-			    this.add0(m) +
-			    "-" +
-			    this.add0(d) +
-			    " " +
-			    this.add0(h) +
-			    ":" +
-			    this.add0(mm) +
-			    ":" +
-			    this.add0(s)
-			  );
+				//时间戳是整数，否则要parseInt转换
+				var time = new Date(timestamp);
+				var y = time.getFullYear();
+				var m = time.getMonth() + 1;
+				var d = time.getDate();
+				var h = time.getHours();
+				var mm = time.getMinutes();
+				var s = time.getSeconds();
+				return (
+					y +
+					"-" +
+					this.add0(m) +
+					"-" +
+					this.add0(d) +
+					" " +
+					this.add0(h) +
+					":" +
+					this.add0(mm) +
+					":" +
+					this.add0(s)
+				);
 			}
 		},
 		computed: {
@@ -121,29 +131,32 @@
 				'isShowEdit',
 				'memoItem',
 				'itemContent',
-				'isNew'
+				'isNew',
+				'userName'
 			]),
 		}
 	}
-</script> 
+</script>
 
 <style scoped lang="scss">
-
 	.memo-wrapper {
 		padding: 0 5px;
 		margin: 5px 0;
 		box-sizing: border-box;
 		float: left;
+
 		.memo {
 			background-color: $bg_color;
 			border: 1px solid $border_color;
 			border-radius: 5px;
 			padding: 10px;
+
 			.header {
 				.top {
 					height: 18.5px;
+
 					.title {
-						height: 18.5px;
+						height: 25px;
 						display: inline-block;
 						width: 60%;
 						overflow: hidden;
@@ -183,23 +196,27 @@
 						font-size: 0.75rem;
 						padding: 5px 0 3px;
 					}
+
 					//分类
-					.sort{
+					.sort {
 						font-size: 0.85rem;
-						svg{
+
+						svg {
 							font-size: 1.25rem;
 						}
-						
+
 					}
 				}
 			}
+
 			//内容
 			.content {
 				word-wrap: break-word;
 				word-break: normal;
 				height: 242.4px;
 				overflow-y: auto;
-				ul{
+
+				ul {
 					list-style-type: disc;
 					background-color: red;
 				}

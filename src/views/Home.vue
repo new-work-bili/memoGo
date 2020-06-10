@@ -9,11 +9,13 @@
 			</div>
 		</div>
 		<!-- 编辑页面 -->
-		<transition name="el-zoom-in-center">
+		<transition name="el-zoom-in-top">
 			<memoEdit v-show="this.$store.state.isShowEdit" class="Edit transition-box"></memoEdit>
 		</transition>
 		<!-- 登陆 -->
-		<Login v-show="this.$store.state.isLogin" class="login"></Login>
+		<transition name="el-zoom-in-top">
+			<Login v-show="this.$store.state.isLogin" class="login"></Login>
+		</transition>
 		<!-- 遮罩 -->
 		<div class="mark" v-show="this.$store.state.isShowEdit ||this.$store.state.isLogin"></div>
 		<!-- 备案号 -->
@@ -22,11 +24,11 @@
 </template>
 
 <script>
-	import memoEdit from './memoEdit.vue'
-	import memoItem from './memoItem.vue'
-	import Headers from './Header.vue'
-	import Record from './Record.vue'
-	import Login from './Login.vue'
+	import memoEdit from '../components/memoEdit.vue'
+	import memoItem from '../components/memoItem.vue'
+	import Headers from '../components/Header.vue'
+	import Record from '../components/Record.vue'
+	import Login from '../components/Login.vue'
 	import {
 		mapState,
 		mapMutations
@@ -46,8 +48,7 @@
 			Login,
 		},
 		data() {
-			return {
-			}
+			return {}
 		},
 		methods: {
 			...mapMutations([
@@ -58,35 +59,56 @@
 				'initItem',
 				'setTopStore',
 				'setIsNew',
-				'set'
+				'set',
+				'setToken',
+				'setlabelArr',
+				'setTaskData'
 			]),
 			//获取用户表格
 			init() {
-				if (this.userName) {
-					postTable('/init/', {
-						userName: this.userName
-					}).then((res) => {
-						if (res.data.userData) {
-							this.initItem(res.data.userData)
-							let _taskData = res.data.taskData
-							this.$store.commit('setTaskData', _taskData)
-						} else {
-							this.initItem('')
+				postTable('/init/', {
+					userName: this.userName
+				}).then((res) => {
+					if (res.data.userData) {
+						//memo数据
+						this.initItem(res.data.userData)
+						let _taskData = res.data.taskData
+						//task数据
+						this.setTaskData(_taskData)
+						//每次init接收新token
+						if (res.data.token) {
+							this.setToken(res.data.token)
 						}
-					}).catch((err) => {})
-				} else {
-					console.log('没有用户名')
-				}
+						//自定义的label信息
+						if(res.data.labelData&&Object.values(res.data.labelData).length !=0){
+							this.setlabelArr(res.data.labelData)
+						}
+					} else {
+						this.initItem('')
+					}
+				}).catch((err) => {})
 			},
 
 		},
-		created() {
-		},
+		created() {},
 		mounted() {
 			//获取初始化
 			this.init()
 			//排序，默認降序
 			this.sortMomeItem(false)
+
+			//背景效果
+			$(document).on("mousemove", evt => {
+				$(".wrapper")
+					.css("background-position-x", Math.ceil(evt.pageX / 40))
+					.css("background-position-y", Math.ceil(evt.pageY / 40));
+			});
+			//移动端改变手机的旋转方向?
+			window.ondeviceorientation = evt => {
+				$("body")
+					.css("background-position-x", evt.gamma)
+					.css("background-position-y", evt.beta);
+			};
 		},
 		watch: {},
 		computed: {
@@ -120,6 +142,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped="scoped" lang="scss">
 	.wrapper {
+		background-image: url(../assets/pixels.png);
 
 		._header {
 			z-index: 99;
@@ -186,7 +209,12 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		// transform: translateX(-50%) translateY(-50%);
 		width: 500px;
 		height: 250px;
 		background-color: #fff;
@@ -225,8 +253,8 @@
 	.active {
 		background: #e7e7e7;
 	}
-	
-	.edit_animate{
+
+	.edit_animate {
 		position: absolute;
 		top: 32%;
 		left: 50%;

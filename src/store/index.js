@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-//初始化；空字符串时 "" ,length == 2，why？？
+//初始化,以免为空时会报错；空字符串时 "" ,length == 2，why？？
 // console.log(localStorage.memoItem == " ")
 if (!localStorage.memoItem || localStorage.memoItem == 'undefined' || localStorage.memoItem == null || localStorage.memoItem
 	.length == 0 || localStorage.memoItem.length == 2) {
+		//初始化
 	let resetArr = [{
 		type: 0, //用来标记是否置顶
 		title: 'reset',
@@ -17,14 +18,22 @@ if (!localStorage.memoItem || localStorage.memoItem == 'undefined' || localStora
 }
 
 //初始化taskData
-if(!localStorage.taskData || localStorage.taskData == 'undefined' || localStorage.taskData == null || localStorage.taskData
-	.length == 0 || localStorage.taskData.length == 2){
-		let taskReData = {
-			'reset':'reset'
-		}
-		localStorage.taskData = JSON.stringify(taskReData)
+if (!localStorage.taskData || localStorage.taskData == 'undefined' || localStorage.taskData == null || localStorage.taskData
+	.length == 0 || localStorage.taskData.length == 2) {
+	//初始化
+	let taskReData = {
+		'reset': 'reset'
 	}
+	localStorage.taskData = JSON.stringify(taskReData)
+}
 
+//初始化labelData
+if (!localStorage.labelData || localStorage.labelData == 'undefined' || localStorage.labelData == null || localStorage.labelData
+	.length == 0 || localStorage.labelData.length == 2) {
+	//初始化
+	let _labelData = []
+	localStorage.labelData = JSON.stringify(_labelData)
+}
 
 
 
@@ -37,12 +46,18 @@ export default new Vuex.Store({
 		isLogin: false, //1登陆，2注册
 		token: localStorage.token || '',
 		userName: localStorage.userName || '',
-		isUp:false,			//降序还是升序
-		taskData:JSON.parse(localStorage.taskData)||{},		//task数据
-		showCalendarTask:false,		//是否显示日历任务组件
-		upload: 'http://localhost:3000/upload'
+		isUp: false, //降序还是升序
+		taskData: JSON.parse(localStorage.taskData) || {}, //task数据
+		showCalendarTask: false, //是否显示日历任务组件
+		upload: 'http://localhost:3000/upload',
+		labelArr: JSON.parse(localStorage.labelData) || [] //自定义的label信息
 	},
 	mutations: {
+		//自定义的label信息
+		setlabelArr(state, data) {
+			state.labelArr = data
+			localStorage.labelData = JSON.stringify(data)
+		},
 		//是否显示编辑框
 		setShowEdit(state, data) {
 			state.isShowEdit = data
@@ -58,11 +73,11 @@ export default new Vuex.Store({
 			state.token = data
 			localStorage.token = data
 		},
-		setTaskData(state,data){
+		setTaskData(state, data) {
 			state.taskData = data
 			localStorage.taskData = JSON.stringify(data)
 		},
-		setShowCalendarTask(state,data){
+		setShowCalendarTask(state, data) {
 			state.showCalendarTask = !state.showCalendarTask
 		},
 		//增加数组
@@ -107,9 +122,9 @@ export default new Vuex.Store({
 			if (up) {
 				state.memoItem.sort((a, b) => {
 					//跳过置顶的
-					if(a.type == 1){
-						return 0	
-					}else{
+					if (a.type == 1) {
+						return 0
+					} else {
 						return a.time - b.time
 					}
 				})
@@ -119,12 +134,12 @@ export default new Vuex.Store({
 				})
 			} else {
 				state.memoItem.sort((a, b) => {
-					if(a.type == 1){
+					if (a.type == 1) {
 						return 0
-					}else{
+					} else {
 						return b.time - a.time
 					}
-					
+
 				})
 				state.memoItem.sort((a, b) => {
 					return b.type - a.type
@@ -179,7 +194,7 @@ export default new Vuex.Store({
 			localStorage.memoItem = JSON.stringify(state.memoItem)
 		},
 		//升降序
-		setIsUP(state, data){
+		setIsUP(state, data) {
 			console.log(data)
 			state.isUp = data
 		}

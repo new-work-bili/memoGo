@@ -213,7 +213,7 @@
 			},
 			//删除task
 			deleteTask(day) {
-				var date = `${this.month}/${day}`
+				var date = `${this.year}/${this.month}/${day}`
 				delete this.taskData[date]
 				this.$store.commit('setTaskData', this.taskData)
 				this.show2 = false
@@ -296,21 +296,29 @@
 </script>
 
 <style lang="scss" scoped>
+	$header:#2980b9;
+	$body:#3498db;
+	$have_task:#3bec3b;
+	$tody:#409eff;
+	// $tody_font_color:;
+	// $font_color:;
+	$other_mouth:#fff0f1;
+	$befor_task:#bdc3c7;
+	$hover_color:#fff;
+	
+	
 	.task_wrapper {
 		position: absolute;
 		z-index: 100;
-		// top: 50%;
-		// left: 50%;
-		// transform: translate(-50%, -50%);
-		// background-color: red;
-
+		box-shadow:0px 1px 4px 0px $header;
 		//头部日期
 		.header {
 			font-size: 1.5rem;
+			font-weight: 900;
 			background-color: firebrick;
 			display: flex;
 			justify-content: space-between;
-			background-color: #8cc4fc;
+			background-color: $header;
 
 			.date_last,
 			.date_next {
@@ -328,8 +336,9 @@
 
 		//日历
 		.canlendar {
-			background-color: #d1e7fe;
-
+			// background-color: $body;
+			background-image:linear-gradient(45deg,#74b9ff 0,$header 100%);
+			
 			.canlendar_week {
 				display: flex;
 				flex-wrap: wrap;
@@ -344,29 +353,29 @@
 
 					span {
 						display: inline-block;
-						width: 30px;
-						height: 30px;
-						line-height: 30px;
+						width: 40px;
+						height: 40px;
+						line-height: 40px;
 						margin: 0 auto;
-						border-radius: 50%;
 					}
 
 					span:hover {
 						cursor: pointer;
-						color: #409eff;
-						font-weight: 600;
+						color: $hover_color;
+						text-shadow: 1px 1px 2px #333;
+						font-weight: 900;
 					}
 				}
 
 				.last_month,
 				.next_month {
-					color: #c0c9db;
+					color: $other_mouth;
 				}
-
-				.today>span {
-					background-color: #409eff;
-					color: #fff;
-					font-weight: 600;
+				
+				.today{
+					background-color: #f1c40f ;
+						font-weight: 900;
+						box-shadow: 0px 0px 5px #f1c40f;
 				}
 
 				//本月日期li
@@ -375,15 +384,17 @@
 				}
 
 				//含有task任务的日期
-				.have_task {
-					background-color: #ffbb00;
-					// background-color: #26a65b;
+				.have_task >span{
+					background-color: $have_task;
+					box-shadow: 0px 0px 5px $have_task;
+					border-radius: 50%;	
 				}
 
 				//在本日之前的task
-				.before_task {
-					background-color: #fff0f0;
-					// background-color: #d0d0d0;
+				.before_task >span{
+					background-color: $befor_task;
+					box-shadow: 0px 0px 5px $befor_task;
+					border-radius: 50%;	
 				}
 
 				.have_task:hover .show_task_text {
@@ -415,9 +426,8 @@
 
 				//划过带有task的日期时显示task信息
 				.today>span:hover {
-					background-color: #409eff;
-					color: #fff;
-					font-weight: 600;
+					// background-color: #409eff;
+					color: #333;
 				}
 			}
 

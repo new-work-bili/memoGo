@@ -8,11 +8,13 @@ import "./assets/style/reset.css";
 import "./assets/style/sass.scss";
 import "bootstrap/dist/js/bootstrap.min.js";
 import axios from "./http/axios.js";
-import { Message,icon } from "element-ui";
+//全局引入element-ui
 // import "element-ui/lib/theme-chalk/index.css";
-// import Element from 'element-ui'	//全局引入element-ui
+// import Element from 'element-ui'	
 // Vue.use(Element) 
 
+//按需引入
+import { Message,icon } from "element-ui";
 // 在调用 Vue.use 前，给 Message 添加 install 方法
 Message.install = function(Vue, options) {
   Vue.prototype.$message = Message;

@@ -5,16 +5,14 @@
 				<div class="left">
 					<!-- 标题 -->
 					<input type="text" class="title" placeholder="标题" v-model="itemContent.title">
-					<!-- 分类选项框 -->  
+					<!-- 分类选项框 -->
 					<div class="btn-group btn-group-sm down_memu">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-						 aria-expanded="false" v-model="itemContent.label">  
+						 aria-expanded="false" v-model="itemContent.label">
 							{{type}} <span class="caret"></span>
-						</button> 
+						</button>
 						<ul class="threeChange dropdown-menu" style="min-width:40px;left:-5px ;">
-							<li @click="type = '工作'"><a href="#">工作</a></li>
-							<li @click="type = '学习'"><a href="#">学习</a></li>
-							<li @click="type = '生活'"><a href="#">生活</a></li>
+							<li v-for="item in testArr"  @click="type = item"><a href="#">{{item}}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -83,19 +81,15 @@
 				this.addMemoItem(this.itemContent)
 
 				//传入服务器
-				if (this.userName) {
-					this.itemContent.userName = this.userName
-					this.itemContent.isNew = this.isNew
-					postTable('/add/', {
-						itemData: this.itemContent
-					}).then((res) => {
+				this.itemContent.userName = this.userName
+				this.itemContent.isNew = this.isNew
+				postTable('/add/', {
+					itemData: this.itemContent
+				}).then((res) => {
 
-					}).catch((err) => {
+				}).catch((err) => {
 
-					})
-				} else {
-					console.log('无用户名,未登录?')
-				}
+				})
 
 				//关闭
 				this.setShowEdit(false)
@@ -105,10 +99,8 @@
 		created() {
 
 		},
-		mounted() {
-		},
-		watch: {
-		},
+		mounted() {},
+		watch: {},
 		computed: {
 			...mapState([
 				'isShowEdit',
@@ -117,15 +109,23 @@
 				'isNew',
 				'isLogin',
 				'userName',
-				'isShowNav'
-			])
+				'isShowNav',
+				'labelArr'
+			]),
+			//遍历自定义的label数组
+			testArr:function(){
+				var arr = ['生活','学习','工作']
+				if(this.labelArr.length!=0){
+					return this.labelArr
+				}
+				return arr
+			}
 		},
 
 	}
 </script>
 
 <style lang="scss" scoped="scoped">
-
 	.wrappers {
 
 		.content {

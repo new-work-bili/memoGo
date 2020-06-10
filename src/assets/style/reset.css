@@ -28,6 +28,10 @@ td {
 	margin: 0;
 }
 
+input{
+	 outline-style: none ;
+}
+
 fieldset,
 img {
 	border: 0;
@@ -61,7 +65,7 @@ th {
 	text-align: left;
 }
 
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -69,7 +73,7 @@ h5,
 h6 {
 	font-weight: normal;
 	font-size: 100%;
-}
+} */
 
 q:before,
 q:after {
@@ -83,6 +87,21 @@ acronym {
 
 a {
 	text-decoration: none
+}
+a:link {
+    text-decoration: none;
+}
+/*已经访问过的链接*/
+a:visited {
+    text-decoration: none;
+}
+/*鼠标划过(停留)的链接*/
+a:hover {
+    text-decoration: none;
+}
+/* 正在点击的链接*/
+a:active {
+    text-decoration: none;
 }
 
 html {
