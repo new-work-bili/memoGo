@@ -16,7 +16,7 @@
 						</ul>
 					</div>
 				</div>
-				<!-- 图标 -->
+				<!-- 图标 -->	  
 				<div class="right">
 					<!-- 保存	点击折叠data-target、data-toggle -->
 					<span class="iconfont icon-baocun1" @click="save"></span>

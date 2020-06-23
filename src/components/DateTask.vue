@@ -17,15 +17,15 @@
 		<div class="canlendar">
 			<!-- 周 -->
 			<ul class="canlendar_week">
-				<li v-for="item in week">{{item}}</li>
+				<li v-for="item in week" :key="item">{{item}}</li>
 			</ul>
 			<ul class="canlendar_week">
 				<!-- 上个月:上个月的天数先减去空着的，这样平了，再一个一个加index -->
-				<li v-for="index in topNumber" class="last_month">
+				<li v-for="index in topNumber" class="last_month" :key="index-40">
 					<span @click="changeDate('preMonth')">{{beforeMonth-topNumber+index}}</span>
 				</li>
 				<!-- 本月的 -->
-				<li v-for="index in monthList[month-1]" :class="{'today':day == index&&month == trueMonth,'have_task':isHaveTask(index),'before_task':isBeforeTask(index)}"
+				<li v-for="index in monthList[month-1]" :key="index" :class="{'today':day == index&&month == trueMonth,'have_task':isHaveTask(index),'before_task':isBeforeTask(index)}"
 				 class="task_li">
 					<!-- 日期 -->
 					<span @click="showTask(index)">
@@ -44,7 +44,6 @@
 								<p class="close_task" @click="closeTask">关闭</p>
 							</div>
 						</div>
-
 					</transition>
 					<!-- 已有的task信息 -->
 					<p class="show_task_text" ref="show_task_text" style="top: 0px;">
@@ -52,7 +51,7 @@
 					</p>
 				</li>
 				<!-- 下个月的 -->
-				<li v-for="index in bottomNumber" class="next_month">
+				<li v-for="index in bottomNumber" :key="index+40" class="next_month">
 					<span @click="changeDate('nextMonth')">{{index}}</span>
 				</li>
 			</ul>
@@ -201,7 +200,6 @@
 					return
 				}
 				var date = `${this.year}/${this.month}/${day}`
-				console.log(this.taskData, this.taskData.length)
 				this.taskData[date] = this.taskInput
 				this.$store.commit('setTaskData', this.taskData)
 				// this.clickDay = false

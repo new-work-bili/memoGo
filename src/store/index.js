@@ -50,7 +50,8 @@ export default new Vuex.Store({
 		taskData: JSON.parse(localStorage.taskData) || {}, //task数据
 		showCalendarTask: false, //是否显示日历任务组件
 		upload: 'http://localhost:3000/upload',
-		labelArr: JSON.parse(localStorage.labelData) || [] //自定义的label信息
+		labelArr: JSON.parse(localStorage.labelData) || [] ,//自定义的label信息
+		showMessageTips:false			//是否显示提示面板
 	},
 	mutations: {
 		//自定义的label信息

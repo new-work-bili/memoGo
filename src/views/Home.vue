@@ -20,6 +20,8 @@
 		<div class="mark" v-show="this.$store.state.isShowEdit ||this.$store.state.isLogin"></div>
 		<!-- 备案号 -->
 		<Record class="record"></Record>
+		<!-- 提示面板 -->
+		<!-- <MessageTips></MessageTips> -->
 	</div>
 </template>
 
@@ -29,6 +31,7 @@
 	import Headers from '../components/Header.vue'
 	import Record from '../components/Record.vue'
 	import Login from '../components/Login.vue'
+	import MessageTips from '../components/MessageTips.vue'
 	import {
 		mapState,
 		mapMutations
@@ -46,6 +49,7 @@
 			Headers,
 			Record,
 			Login,
+			MessageTips,
 		},
 		data() {
 			return {}
@@ -216,7 +220,7 @@
 		margin: auto;
 		// transform: translateX(-50%) translateY(-50%);
 		width: 500px;
-		height: 250px;
+		height: 235px;
 		background-color: #fff;
 		z-index: 99;
 	}
