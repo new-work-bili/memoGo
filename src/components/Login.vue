@@ -1,7 +1,7 @@
 <template>
 	<div class="login_wrapper">
 		<div class="right">
-			<!-- 保存 -->
+			<!-- 关闭 -->
 			<span @click="close" class="glyphicon glyphicon-remove"></span>
 		</div>
 		<form class="form-horizontal form_box" role="form">
@@ -199,8 +199,5 @@
 			}
 		}
 
-		.form_box {
-			padding: 50px;
-		}
 	}
 </style>

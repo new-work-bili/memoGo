@@ -17,11 +17,14 @@
 			<Login v-show="this.$store.state.isLogin" class="login"></Login>
 		</transition>
 		<!-- 遮罩 -->
-		<div class="mark" v-show="this.$store.state.isShowEdit ||this.$store.state.isLogin"></div>
+		<div class="mark" v-show="this.$store.state.isShowEdit ||this.$store.state.isLogin ||this.$store.state.showFeedBack"></div>
 		<!-- 备案号 -->
 		<Record class="record"></Record>
-		<!-- 提示面板 -->
-		<!-- <MessageTips></MessageTips> -->
+		<!-- 反馈 -->
+		<transition name="el-zoom-in-top">
+			<feedBack class="transition-box" v-show="this.$store.state.showFeedBack"></feedBack>
+		</transition>
+		
 	</div>
 </template>
 
@@ -31,7 +34,7 @@
 	import Headers from '../components/Header.vue'
 	import Record from '../components/Record.vue'
 	import Login from '../components/Login.vue'
-	import MessageTips from '../components/MessageTips.vue'
+	import feedBack from '../components/feedBack.vue'
 	import {
 		mapState,
 		mapMutations
@@ -49,7 +52,7 @@
 			Headers,
 			Record,
 			Login,
-			MessageTips,
+			feedBack
 		},
 		data() {
 			return {}
@@ -218,11 +221,11 @@
 		right: 0;
 		bottom: 0;
 		margin: auto;
-		// transform: translateX(-50%) translateY(-50%);
 		width: 500px;
 		height: 235px;
 		background-color: #fff;
 		z-index: 99;
+		padding: 50px;
 	}
 
 
@@ -231,7 +234,13 @@
 		margin-right: auto;
 		margin-left: auto;
 	}
-
+	
+	@media (max-width:768px) {
+		.login,.feed_back{
+			width:100%;
+			padding: 25px 75px;
+		}
+	}
 
 	/*768-992px以上宽度container为750px*/
 	@media (min-width: 768px) {

@@ -184,7 +184,7 @@
 					padding: 5px;
 				}
 
-				textarea:focus {
+				>>> textarea:focus {
 					outline: none;
 					box-shadow: 0 0 5px $input_border_color;
 					border: 1px solid #66afe9;

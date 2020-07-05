@@ -1,6 +1,8 @@
 <template>
 	<div class="tips_wrapper">
-		<div class="tips" v-for="(text,index) in tipsArr" v-show="text == showTips" :style="tipsStyle(text,index)">Tips:<span v-html="text"></span></div>
+		<div class="tips" v-for="(text,index) in tipsArr" :key="index" v-show="text == showTips" :style="tipsStyle(text,index)">
+			Tips:<span v-html="text" @click="aClick"></span>
+		</div>
 	</div>
 </template>
 
@@ -8,19 +10,26 @@
 	export default {
 		data() {
 			return {
-				
+
 				tipsArr: [
-				'项目github地址:<a href="http://github.com/new-work-bili/memoGo" target="_blank">github.com/new-work-bili/memoGo</a> ', 		//tips内内容
-				'创建项目快捷键:shift+c',
-				'您可以在筛选按钮中自定义memo类型',
-				'目前尚不支持微信第三方登陆',
-				'<a href="#" @click="feedBack">点击</a>反馈,提出您宝贵的意见!'
-				], 
-				showTips:false,//当前tips是否显示
+					'项目github地址:<a href="http://github.com/new-work-bili/memoGo" target="_blank">github.com/new-work-bili/memoGo</a> ', //tips内内容
+					'创建项目快捷键:shift+c',
+					'您可以在筛选按钮中自定义memo类型',
+					'目前尚不支持微信第三方登陆',
+					`<a href="#" class="feedBack">点击</a>反馈,提出您宝贵的意见!`
+				],
+				showTips: false, //当前tips是否显示
 			}
 		},
 		//展示提示面板
 		methods: {
+			//点击反馈
+			aClick(e) {
+				if (e.target.className == 'feedBack') {
+					this.$store.state.showFeedBack = true
+				}
+			},
+			//循环展示tips
 			changeTips() {
 				var num = 1;
 				//循环展示tips的内容
@@ -91,8 +100,8 @@
 				return function(str) {
 					let num = 0;
 					//匹配html标签内容，主要是让a标签不计入字符长度
-					var reg = /\<(.*?)\>/g		
-					var reStr = str.replace(reg,'')
+					var reg = /\<(.*?)\>/g
+					var reStr = str.replace(reg, '')
 					for (var i = 0; i < reStr.length; i++) {
 						var ascll = reStr.charAt(i).charCodeAt()
 						if (ascll > 33 & ascll < 126) { //不是汉字的都算0.5
@@ -120,9 +129,9 @@
 		},
 		mounted() {
 			//初始haulshowTips,因为定时器后置
-			this.showTips=this.tipsArr[0]
+			this.showTips = this.tipsArr[0]
 			this.changeTips()
-			
+
 		},
 	}
 </script>
@@ -138,15 +147,15 @@
 		white-space: nowrap;
 		// color: #777;
 	}
-	
-	.tips_wrapper{
+
+	.tips_wrapper {
 		position: absolute;
 		left: 30%;
 		top: 12px;
 		height: 1.25em;
 		z-index: 99;
 	}
-	
+
 	// 提示面板
 	@media screen and (max-width: 1200px) {
 		.tips {
