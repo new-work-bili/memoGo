@@ -1,29 +1,50 @@
 <template>
-	<div class="feed_back" >
+	<div class="feed_back">
 		<!-- 关闭 -->
-		<span @click="close" class="glyphicon glyphicon-remove close" ></span>
+		<!-- 	<span @click="close" class="glyphicon glyphicon-remove close" ></span>
 		<p class="title">遇到BUG或者有什么意见请告诉我吧:</p>
 		<textarea class="text-content form-control" v-model="text"></textarea>
-		<span class="up" @click="upContent">提交</span>
+		<span class="up" @click="upContent">提交</span> -->
+
+		<FormSlot :click="slotName">
+			<template v-slot:title>
+				遇到BUG或者有什么意见请告诉我吧:
+			</template>
+			<template v-slot:form>
+				<textarea class="text-content form-control" v-model="text"></textarea>
+			</template>
+			<template v-slot:button>
+				<span class="up" @click="upContent">提交</span> 
+			</template>
+		</FormSlot>
 	</div>
 </template>
 
 <script>
-	import {postTable} from '../http/func.js'
+	import {
+		postTable
+	} from '../http/func.js'
+	import FormSlot from '../components/FormSlot.vue'
 	export default {
 		data() {
 			return {
 				text: '',
-				showFeedBack: false
+				showFeedBack: false,
+				slotName: 'FeedBack'
 			}
+		},
+		components: {
+			FormSlot
 		},
 		methods: {
 			close() {
 				this.$store.state.showFeedBack = false
 			},
-			upContent(){
-				postTable('/sendEmali/',{text:this.text}).then((res)=>{
-					
+			upContent() {
+				postTable('/sendEmali/', {
+					text: this.text
+				}).then((res) => {
+
 				})
 				this.$store.state.showFeedBack = false
 			}
@@ -36,20 +57,22 @@
 </script>
 
 <style lang="scss" scoped="scoped">
-	.title{
+	.title {
 		font-weight: 600;
 	}
+
 	//X好
-	.close{
+	.close {
 		position: absolute;
 		right: 6px;
 		top: 6px;
 		padding: 3px;
-		&:hover{
+
+		&:hover {
 			cursor: pointer;
 		}
-		
 	}
+
 	//提交
 	.up {
 		font-weight: 600;
@@ -78,7 +101,7 @@
 
 		box-shadow: 0 0 5px #fff;
 		border-radius: 5px;
-		
+
 		textarea {
 			font-size: 14px;
 			height: 150px;

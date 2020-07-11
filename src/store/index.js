@@ -4,9 +4,11 @@ Vue.use(Vuex)
 
 //初始化,以免为空时会报错；空字符串时 "" ,length == 2，why？？
 // console.log(localStorage.memoItem == " ")
+// console.log('getItem:',!!localStorage.getItem('memoItem'))
 if (!localStorage.memoItem || localStorage.memoItem == 'undefined' || localStorage.memoItem == null || localStorage.memoItem
 	.length == 0 || localStorage.memoItem.length == 2) {
-		//初始化
+		// console.log(2)
+		// 初始化
 	let resetArr = [{
 		type: 0, //用来标记是否置顶
 		title: 'reset',

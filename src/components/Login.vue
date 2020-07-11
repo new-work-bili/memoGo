@@ -1,7 +1,6 @@
 <template>
 	<div class="login_wrapper">
-		<div class="right">
-			<!-- 关闭 -->
+<!-- 		<div class="right">
 			<span @click="close" class="glyphicon glyphicon-remove"></span>
 		</div>
 		<form class="form-horizontal form_box" role="form">
@@ -23,7 +22,11 @@
 			<div v-if="this.$store.state.isLogin == 2">
 				<span @click.prevent="registe" class="login_registe">注册</span>
 			</div>
-		</form>
+		</form> -->
+		
+		<FormSlot :click="slotName">
+			
+		</FormSlot>
 	</div>
 </template>
 
@@ -36,6 +39,7 @@
 		postTable,
 		getTable
 	} from '../http/func.js'
+	import FormSlot from '../components/FormSlot.vue'
 	import 'bootstrap/dist/css/bootstrap.min.css'
 	export default {
 		data() {
@@ -44,7 +48,11 @@
 					account: 'admin',
 					password: 'admin'
 				},
+				slotName:'Login'
 			}
+		},
+		components: {
+			FormSlot
 		},
 		methods: {
 			...mapMutations([

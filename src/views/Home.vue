@@ -25,6 +25,8 @@
 			<feedBack class="transition-box" v-show="this.$store.state.showFeedBack"></feedBack>
 		</transition>
 		
+	
+		
 	</div>
 </template>
 
@@ -35,6 +37,7 @@
 	import Record from '../components/Record.vue'
 	import Login from '../components/Login.vue'
 	import feedBack from '../components/feedBack.vue'
+	
 	import {
 		mapState,
 		mapMutations
@@ -52,10 +55,13 @@
 			Headers,
 			Record,
 			Login,
-			feedBack
+			feedBack,
+			
 		},
 		data() {
-			return {}
+			return {
+				showFeedBack:'showFeedBack'
+			}
 		},
 		methods: {
 			...mapMutations([

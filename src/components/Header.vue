@@ -49,7 +49,7 @@
 							<ul class="dropdown-menu">
 								<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
 								<li role="separator" class="divider"></li>
-								<li v-for="value in testArr" @click="clickFilter(value)">
+								<li v-for="value in testArr" :key="value" @click="clickFilter(value)">
 									<a>{{value}}<span class="phone_label_length">{{labelLength(value)}}</span></a>
 									<!-- 删除 -->
 									<span class="phone_delet_label iconfont icon-shanchu" @click.stop="deletLabel(value)" v-if="isNewlabel(value)"></span>
@@ -65,7 +65,7 @@
 										<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
 										<hr>
 										<!-- 循环出类别列表 -->
-										<li v-for="value in testArr" @click="clickFilter(value)">
+										<li v-for="value in testArr" :key="value" @click="clickFilter(value)">
 											<a>{{value}}<span class="pc_label_length">{{labelLength(value)}}</span></a>
 											<!-- 删除 -->
 											<span class="delet_label iconfont icon-shanchu" @click.stop="deletLabel(value)" v-if="isNewlabel(value)"></span>
@@ -155,20 +155,26 @@
 			},
 			//回车,添加类别
 			addInput() {
-				var _labelArr = this.labelArr
-				if (this.addInputtData.length >= 5) {
-					this.$message1('长度过长!', 'warning')
-				} else {
-					this.show_add_input = false
-					_labelArr.push(this.addInputtData)
-					this.setlabelArr(_labelArr)
-					postTable('/changeLabel/', {
-						labelArr: this.labelArr
-					}).then((res) => {
-
-					})
+				if(this.labelArr.indexOf(this.addInputtData)!=-1){
+					this.$message1('已存在该类型!','error')
+					return
+				}else{
+					var _labelArr = this.labelArr
+					if (this.addInputtData.length >= 5) {
+						this.$message1('长度过长!', 'warning')
+					} else {
+						this.show_add_input = false
+						_labelArr.push(this.addInputtData)
+						this.setlabelArr(_labelArr)
+						postTable('/changeLabel/', {
+							labelArr: this.labelArr
+						}).then((res) => {
+					
+						})
+					}
+					this.addInputtData = ''
 				}
-				this.addInputtData = ''
+				
 			},
 			//删除对应的
 			deletLabel(label) {
