@@ -1,22 +1,10 @@
 <template>
 	<div class="feed_back">
 		<!-- 关闭 -->
-		<!-- 	<span @click="close" class="glyphicon glyphicon-remove close" ></span>
+			<span @click="close" class="glyphicon glyphicon-remove close" ></span>
 		<p class="title">遇到BUG或者有什么意见请告诉我吧:</p>
 		<textarea class="text-content form-control" v-model="text"></textarea>
-		<span class="up" @click="upContent">提交</span> -->
-
-		<FormSlot :click="slotName">
-			<template v-slot:title>
-				遇到BUG或者有什么意见请告诉我吧:
-			</template>
-			<template v-slot:form>
-				<textarea class="text-content form-control" v-model="text"></textarea>
-			</template>
-			<template v-slot:button>
-				<span class="up" @click="upContent">提交</span> 
-			</template>
-		</FormSlot>
+		<span class="up" @click="upContent">提交</span>
 	</div>
 </template>
 
@@ -24,17 +12,14 @@
 	import {
 		postTable
 	} from '../http/func.js'
-	import FormSlot from '../components/FormSlot.vue'
 	export default {
 		data() {
 			return {
 				text: '',
 				showFeedBack: false,
-				slotName: 'FeedBack'
 			}
 		},
 		components: {
-			FormSlot
 		},
 		methods: {
 			close() {

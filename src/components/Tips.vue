@@ -12,11 +12,11 @@
 			return {
 
 				tipsArr: [
-					// '项目github地址:<a href="http://github.com/new-work-bili/memoGo" target="_blank">github.com/new-work-bili/memoGo</a> ', //tips内内容
-					// '创建项目快捷键:shift+c',
-					// '您可以在筛选按钮中自定义memo类型',
-					// '目前尚不支持微信第三方登陆',
-					`<a href="#" class="feedBack">点击</a>反馈,提出您宝贵的意见!`
+					'项目github地址:<a href="http://github.com/new-work-bili/memoGo" target="_blank">github.com/new-work-bili/memoGo</a> ', //tips内内容
+					`<a href="#" class="feedBack">点击</a>反馈,提出您宝贵的意见!`,
+					'创建项目快捷键:shift+c',
+					'您可以在筛选按钮中自定义memo类型',
+					'目前尚不支持微信第三方登陆',
 				],
 				showTips: false, //当前tips是否显示
 			}

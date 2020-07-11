@@ -265,17 +265,10 @@
 				<a href="/"><button class="btn green">返回首页</button></a>
 			</div>
 		</div>
-		
-		<!-- <FormSlot :click="clickName">
-			<template v-slot:form>
-				My Image’s Title
-			</template>
-		</FormSlot> -->
 	</div>
 </template>
 
 <script>
-	import FormSlot from '../components/FormSlot.vue'
 	export default {
 		data() {
 			return {
@@ -283,7 +276,6 @@
 			}
 		},
 		components: {
-			FormSlot
 		},
 		mounted() {
 

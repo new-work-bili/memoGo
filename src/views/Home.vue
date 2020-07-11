@@ -24,9 +24,6 @@
 		<transition name="el-zoom-in-top">
 			<feedBack class="transition-box" v-show="this.$store.state.showFeedBack"></feedBack>
 		</transition>
-		
-	
-		
 	</div>
 </template>
 
