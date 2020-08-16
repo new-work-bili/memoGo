@@ -20,7 +20,7 @@
 							<use xlink:href="#icon-QQ1"></use>
 						</svg>
 						<span class="weixin_wrapper">
-							<svg class="icon" aria-hidden="true" @click="weixin" @mouseout="leaveWeixin">
+							<svg class="icon" aria-hidden="true" @click="weixin">
 								<use xlink:href="#icon-weixin"></use>
 							</svg>
 							<span class="toding" v-show="toding">开发中</span>
@@ -270,10 +270,7 @@
 			//微信
 			weixin() {
 				// this.toding = true
-				this.$message1('开发中', 'warning')
-			},
-			leaveWeixin() {
-				this.toding = false
+				this.$message1('尚不支持微信登陆!', 'warning')
 			},
 			//绑定快捷键
 			hotKey() {

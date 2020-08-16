@@ -46,7 +46,8 @@
 		data() {
 			return {
 				type: '工作',
-				memoData: [], //遍历用的数组
+				memoData: [], //遍历用的数组	
+				thisItemContent:{}//保存itemContent副本
 				// createData: {
 				//   type: '', //markdown? poor?
 				//   title: '',
@@ -68,6 +69,7 @@
 			]),
 			close() {
 				this.setShowEdit(false)
+				// this.itemContent.content = ''
 			},
 			//保存
 			save() {
@@ -97,9 +99,10 @@
 			}
 		},
 		created() {
-
+			
 		},
-		mounted() {},
+		mounted() {
+		},
 		watch: {},
 		computed: {
 			...mapState([
