@@ -12,7 +12,7 @@
 							{{type}} <span class="caret"></span>
 						</button>
 						<ul class="threeChange dropdown-menu" style="min-width:40px;left:-5px ;">
-							<li v-for="item in testArr"  @click="type = item"><a href="#">{{item}}</a></li>
+							<li v-for="item in testArr" :key="item" @click="type = item"><a href="#">{{item}}</a></li>
 						</ul>
 					</div>
 				</div>
@@ -47,7 +47,7 @@
 			return {
 				type: '工作',
 				memoData: [], //遍历用的数组	
-				thisItemContent:{}//保存itemContent副本
+				testItem:{}		//当前编辑的内容
 				// createData: {
 				//   type: '', //markdown? poor?
 				//   title: '',
@@ -65,7 +65,8 @@
 				'setItemContent',
 				'setIsNew',
 				'setLogin',
-				'setTopStore'
+				'setTopStore',
+				'countAllLabel',
 			]),
 			close() {
 				this.setShowEdit(false)
@@ -81,7 +82,13 @@
 				}
 				this.itemContent.label = this.type //标签
 				this.addMemoItem(this.itemContent)
-
+				
+				//header的label长度的计算
+				console.log(this.itemContent.label)
+				
+				// this.addLabelLength(['add',this.itemContent.label])	//对应label的长度++
+				//触发重新计算label的总长度
+				this.countAllLabel()
 				//传入服务器
 				this.itemContent.userName = this.userName
 				this.itemContent.isNew = this.isNew
@@ -97,9 +104,6 @@
 				this.setShowEdit(false)
 
 			}
-		},
-		created() {
-			
 		},
 		mounted() {
 		},

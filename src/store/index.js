@@ -53,10 +53,34 @@ export default new Vuex.Store({
 		showCalendarTask: false, //是否显示日历任务组件
 		upload: 'http://localhost:3000/upload',
 		labelArr: JSON.parse(localStorage.labelData) || [] ,//自定义的label信息
+		AllLabel:0,						//总数
+		labelLength:{},					//各个label的长度
 		showMessageTips:false			,//是否显示提示面板
 		showFeedBack:false				//反馈
 	},
 	mutations: {
+		//计算label的数量总数
+		countAllLabel(state,data){
+			var lengthAll=0;
+			state.labelArr.forEach((item)=>{
+				var length = JSON.parse(localStorage.memoItem).filter((items) => {
+					return items.label == item
+				})
+				state.labelLength[item] = length.length
+				lengthAll+=length.length
+				
+			})
+			state.AllLabel = lengthAll
+		},
+		//各个label++或--的时候;现在只是在vuex计算总数，所以不用
+		addLabelLength(state,data){
+			if(data[0]=='add'){
+				state.labelLength[data[1]]++
+			}else if(data[0]=='sub'){
+				state.labelLength[data[1]]--
+			}
+			this.commit('countAllLabel')
+		},
 		//自定义的label信息
 		setlabelArr(state, data) {
 			state.labelArr = data

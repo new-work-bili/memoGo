@@ -4,10 +4,8 @@ import router from '../router/index.js'
 import {
 	Message
 } from 'element-ui'
-
 // axios.defaults.baseURL = 'http://localhost:3000';
 axios.defaults.baseURL = 'http://123.57.209.85';
-axios.defaults.timeout = 10000;
 
 axios.interceptors.request.use(
 	config => {
@@ -81,7 +79,7 @@ axios.interceptors.response.use(
 		return res
 	},
 	err => {
-		console.log('拦截器打印err:', err.message)
+
 		if (err.message.indexOf('timeout') != -1) {
 			Message({
 				showClose: false,

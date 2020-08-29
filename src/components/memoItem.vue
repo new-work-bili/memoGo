@@ -60,14 +60,14 @@
 			...mapMutations([
 				'addMemoItem',
 				'setShowEdit',
-				'deleteMemoItem',
 				'setItemContent',
 				'setIsNew',
-				'setTopStore'
+				'setTopStore',
+				'countAllLabel',
+				'deleteMemoItem'
 			]),
 			//删除
 			deletes() {
-				console.log(this.item.time)
 				this.deleteMemoItem(this.item.time)
 				postTable('/delete/', {
 					time: this.item.time
@@ -76,13 +76,16 @@
 				}).catch((err) => {
 
 				})
+				
+				//触发重新计算label的总长度
+				this.countAllLabel()	
 			},
 			//编辑
 			edit() {
 				this.setIsNew(false) //表示这是编辑
 				this.setShowEdit(true)
 				this.setItemContent(this.item)
-				console.log(this.itemContent)
+				this.setItemContent({...this.item})
 			},
 			//置顶
 			setTop(item) {
@@ -134,7 +137,12 @@
 				'isNew',
 				'userName'
 			]),
-		}
+		},
+		watch: {
+			item(newValue, oldValue) {
+				console.log(newValue, oldValue)
+			}
+		},
 	}
 </script>
 
@@ -144,7 +152,7 @@
 		margin: 5px 0;
 		box-sizing: border-box;
 		float: left;
-
+		height: 326px;
 		.memo {
 			background-color: $bg_color;
 			border: 1px solid $border_color;

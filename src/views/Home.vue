@@ -72,7 +72,8 @@
 				'set',
 				'setToken',
 				'setlabelArr',
-				'setTaskData'
+				'setTaskData',
+				'countAllLabel'
 			]),
 			//获取用户表格
 			init() {
@@ -93,6 +94,9 @@
 						if(res.data.labelData&&Object.values(res.data.labelData).length !=0){
 							this.setlabelArr(res.data.labelData)
 						}
+						
+						//更新label数量
+						this.$store.commit('countAllLabel')
 					} else {
 						this.initItem('')
 					}
@@ -100,7 +104,10 @@
 			},
 
 		},
-		created() {},
+		created() {
+			//对label总数进行计算
+			this.$store.commit('countAllLabel')
+		},
 		mounted() {
 			//获取初始化
 			this.init()

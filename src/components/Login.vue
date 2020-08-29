@@ -125,6 +125,9 @@
 						if (res.data.labelData && Object.values(res.data.labelData).length != 0) {
 							this.setlabelArr(res.data.labelData)
 						}
+						
+						//更新label数量
+						this.$store.commit('countAllLabel')
 
 					}).catch((err) => {})
 				} else {

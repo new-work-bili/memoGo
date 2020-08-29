@@ -47,7 +47,7 @@
 							 @click="showAll = !showAll">{{label}}
 								<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
+								<li @click="clickFilter('全部')"><a>全部<span class="phone_label_length">{{this.$store.state.AllLabel}}</span></a></li>
 								<li role="separator" class="divider"></li>
 								<li v-for="value in testArr" :key="value" @click="clickFilter(value)">
 									<a>{{value}}<span class="phone_label_length">{{labelLength(value)}}</span></a>
@@ -62,7 +62,8 @@
 							<transition name="el-zoom-in-top">
 								<div v-show="showAll" class="all">
 									<ul>
-										<li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li>
+										<!-- <li @click="clickFilter('全部')"><a>全部<span>{{this.Length}}</span></a></li> -->
+										<li @click="clickFilter('全部')"><a>全部<span class="pc_label_length">{{this.$store.state.AllLabel}}</span></a></li>
 										<hr>
 										<!-- 循环出类别列表 -->
 										<li v-for="value in testArr" :key="value" @click="clickFilter(value)">
@@ -153,43 +154,48 @@
 					$('.add_input').focus()
 				})
 			},
-			//回车,添加类别
+			//回车,添加类别-----》得触发一下让length跟新
 			addInput() {
-				if(this.labelArr.indexOf(this.addInputtData)!=-1){
-					this.$message1('已存在该类型!','error')
+				console.log('this.labelArr:', this.labelArr)
+				if (this.labelArr.indexOf(this.addInputtData) != -1) {
+					this.$message1('已存在该类型!', 'error')
 					return
-				}else{
+				} else if (this.addInputtData.length >= 5) {
+					this.$message1('长度过长!', 'warning')
+					return
+				} else if (this.addInputtData === '') {
+					this.$message1('不可为空!', 'warning')
+					return
+				} else if (this.labelArr.length + 1 >= 10) {
+					this.$message1('类型超过规定数量!', 'warning')
+					return
+				} else {
 					var _labelArr = this.labelArr
-					if (this.addInputtData.length >= 5) {
-						this.$message1('长度过长!', 'warning')
-					} else {
-						this.show_add_input = false
-						_labelArr.push(this.addInputtData)
-						this.setlabelArr(_labelArr)
-						postTable('/changeLabel/', {
-							labelArr: this.labelArr
-						}).then((res) => {
-					
-						})
-					}
+					this.show_add_input = false
+					_labelArr.push(this.addInputtData)
+					this.setlabelArr(_labelArr)
+					postTable('/changeLabel/', {
+						labelArr: this.labelArr
+					}).then((res) => {
+
+					})
 					this.addInputtData = ''
 				}
-				
+
 			},
 			//删除对应的
 			deletLabel(label) {
 				var _labelArr = this.labelArr
 				console.log('删除时遍历的_labelArr:', _labelArr)
 				_labelArr.forEach((item, index) => {
-					console.log(item)
 					if (item == label) {
 						_labelArr.splice(index, 1)
 					}
 
 				})
-				console.log('删除之后赋值的_labelArr:', _labelArr)
+				// console.log('删除之后赋值的_labelArr:', _labelArr)
 				this.setlabelArr(_labelArr)
-				console.log('localStorage.labelData:', localStorage.labelData)
+				// console.log('localStorage.labelData:', localStorage.labelData)
 				postTable('/changeLabel/', {
 					labelArr: _labelArr
 				}).then((res) => {
@@ -241,7 +247,6 @@
 			},
 			//文字筛选
 			inputChange() {
-				console.log(this.inputText)
 				this.setFilter(this.inputText)
 			},
 			//登陆
@@ -292,21 +297,15 @@
 				'isShowNav',
 				'labelArr'
 			]),
-			//分类是学习的数量
+			//对应label的数量
 			labelLength: function() {
+				
 				return function(label) {
 					var length = JSON.parse(localStorage.memoItem).filter((item) => {
 						return item.label == label
 					})
 					return length.length
 				}
-			},
-			Length: function() {
-				var length = 0
-				this.testArr.forEach((item) => {
-					length += this.labelLength(item)
-				})
-				return length
 			},
 			//判断是否是用户新增的label
 			isNewlabel: function() {
@@ -333,20 +332,18 @@
 			}
 		},
 		mounted() {
-			
+
 		},
 		created() {
 			document.addEventListener('keydown', this.hotKey)
 			//焦距表單
 		},
 		watch: {
-			is() {
-				console.log($(this.$refs.nav))
-				$(this.$refs.nav).collapse()
-			},
-			
-		},
-
+			// is() {
+			// 	console.log($(this.$refs.nav))
+			// 	$(this.$refs.nav).collapse()
+			// },
+		}
 	}
 </script>
 
@@ -364,7 +361,7 @@
 		height: 1.25em;
 		white-space: nowrap;
 	}
-	
+
 	.login {
 		position: absolute;
 		top: 14px;
@@ -563,7 +560,7 @@
 			display: block;
 		}
 	}
-	
+
 	// 提示面板
 	// @media screen and (max-width: 1200px) {
 	// 	.tips {
@@ -571,5 +568,3 @@
 	// 	}
 	// }
 </style>
-
-
