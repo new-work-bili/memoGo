@@ -1,5 +1,5 @@
 <template>
-	<div class="wrappers" role="navigation">
+	<div class="wrappers" role="navigation" >
 		<!-- bootstrap navbar -->
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
@@ -33,8 +33,8 @@
 				<!-- PC端 -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ref="nav">
 					<ul class="nav navbar-nav navbar-right">
-						<li :class="{dateTask_click_down:ShowCalendarTask}">
-							<a @click="showCalendarTask">任务日历</span></a>
+						<li :class="{dateTask_click_down:ShowCalendarTask}" @click="RstopProp">
+							<a @click="showCalendarTask_click">任务日历</span></a>
 							<!-- task日历任务组件 -->
 							<transition name="el-zoom-in-top">
 								<DateTask class="transition-box" v-show="ShowCalendarTask"></DateTask>
@@ -57,7 +57,7 @@
 							</ul>
 						</li>
 						<!-- 筛选—_电脑端 -->
-						<li class="_all_li">
+						<li class="_all_li" @click="SstopProp">
 							<a @click="showAll = !showAll;show_add_input = false">{{label}}<span class="caret"></span></a>
 							<transition name="el-zoom-in-top">
 								<div v-show="showAll" class="all">
@@ -119,12 +119,13 @@
 				up: false, //排序是升序还是降序
 				inputText: '',
 				toding: false, //显示开发中字样
-				ShowCalendarTask: false,
-				showAll: false, //显示全部分类
+				ShowCalendarTask: this.winodwControlShowTask,	//是否显示日历
+				showAll: false, //是否显示筛选菜单
 				show_add_input: false, //显示添加分类的表单
 				addInputtData: '', //添加的新类别内容
 			}
 		},
+		props:['winodwControlShowTask'],
 		components: {
 			DateTask,
 			Tips
@@ -147,6 +148,16 @@
 				'setShowCalendarTask',
 				'setlabelArr'
 			]),
+			//阻止冒泡,防止点击日历的时候也触发全局点击，进而导致菜单隐藏
+			RstopProp(e){
+				this.showAll = false;
+				e.stopPropagation()
+			},
+			//筛选
+			SstopProp(e){
+				this.ShowCalendarTask = false
+				e.stopPropagation()
+			},
 			//点击 +
 			addLabel() {
 				this.show_add_input = true
@@ -222,9 +233,13 @@
 				$('#bs-example-navbar-collapse-1').collapse('hide')
 			},
 			//点击显示日历任务
-			showCalendarTask() {
-				this.setShowCalendarTask()
-				this.ShowCalendarTask = !this.ShowCalendarTask
+			showCalendarTask_click() {
+				console.log('点击日历，显示');
+				//延迟执行；先让触发全局点击的执行；
+				setTimeout(()=>{
+					this.setShowCalendarTask()
+					this.ShowCalendarTask = !this.ShowCalendarTask
+				},0)
 			},
 			//筛选选项
 			clickFilter(data) {
@@ -295,7 +310,8 @@
 				'isLogin',
 				'userName',
 				'isShowNav',
-				'labelArr'
+				'labelArr',
+				// 'showCalendarTask'	//vuex中控制日历显示隐藏
 			]),
 			//对应label的数量
 			labelLength: function() {
@@ -339,10 +355,11 @@
 			//焦距表單
 		},
 		watch: {
-			// is() {
-			// 	console.log($(this.$refs.nav))
-			// 	$(this.$refs.nav).collapse()
-			// },
+			winodwControlShowTask(){	//点击全局 菜单消失
+				console.log('watch_winodwControlShowTask设置')
+				this.ShowCalendarTask =false;
+				this.showAll = false;
+			}
 		}
 	}
 </script>

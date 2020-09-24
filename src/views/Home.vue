@@ -1,7 +1,7 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" @click="hiddenHeader">
 		<!-- 头部 -->
-		<Headers class="_header"></Headers>
+		<Headers class="_header" :winodwControlShowTask="winodwControlShowTask"></Headers>
 		<!-- 备忘录 -->
 		<div class="content">
 			<div class="container">
@@ -34,7 +34,9 @@
 	import Record from '../components/Record.vue'
 	import Login from '../components/Login.vue'
 	import feedBack from '../components/feedBack.vue'
-	
+	import axios from '../http/axios.js'
+	import qs from 'qs' //是否使用qs取决于实际情况以及与后台的沟通
+
 	import {
 		mapState,
 		mapMutations
@@ -53,11 +55,12 @@
 			Record,
 			Login,
 			feedBack,
-			
+
 		},
 		data() {
 			return {
-				showFeedBack:'showFeedBack'
+				showFeedBack: 'showFeedBack',
+				winodwControlShowTask: false, //传给子级的；点击空白子级彩蛋回收
 			}
 		},
 		methods: {
@@ -73,8 +76,13 @@
 				'setToken',
 				'setlabelArr',
 				'setTaskData',
-				'countAllLabel'
+				'countAllLabel',
 			]),
+			//全局事件；监听点击之后隐藏彩蛋
+			hiddenHeader() {
+				console.log(this.winodwControlShowTask)
+				this.winodwControlShowTask = !this.winodwControlShowTask
+			},
 			//获取用户表格
 			init() {
 				postTable('/init/', {
@@ -91,10 +99,10 @@
 							this.setToken(res.data.token)
 						}
 						//自定义的label信息
-						if(res.data.labelData&&Object.values(res.data.labelData).length !=0){
+						if (res.data.labelData && Object.values(res.data.labelData).length != 0) {
 							this.setlabelArr(res.data.labelData)
 						}
-						
+
 						//更新label数量
 						this.$store.commit('countAllLabel')
 					} else {
@@ -102,6 +110,76 @@
 					}
 				}).catch((err) => {})
 			},
+			//性能监控，PV计算
+			timeObserve() {
+				var time = window.performance.timing
+				//白屏时间
+				var whiteTime = time.responseEnd - time.navigationStart
+				//首屏时间
+				var firstTime = time.domContentLoadedEventEnd - time.navigationStart
+				//页面总下载时间
+				var laodTime = time.loadEventEnd - time.navigationStart
+				//DNS解析
+				var DNSTime = time.domainLookupEnd - time.domainLookupStart
+				//tcp耗时
+				var TCPTime = time.connectEnd - time.connectStart
+
+				var timeObject = {
+					whiteTime,
+					firstTime,
+					laodTime,
+					DNSTime,
+					TCPTime
+				}
+				return timeObject
+			},
+			//用户设备信息
+			userIn() {
+				var sBrowser, sUsrAg = navigator.userAgent;
+				if (/(iPhone|iPad|iPod|iOS)/i.test(sUsrAg)) {
+					// ios
+					sBrowser = 'ios'
+				} else if (/(Android)/i.test(sUsrAg)) {
+					// 安卓
+					sBrowser = 'android'
+				} else if (sUsrAg.indexOf("Firefox") > -1) {
+					sBrowser = "Mozilla Firefox";
+					// "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
+				} else if (sUsrAg.indexOf("Opera") > -1 || sUsrAg.indexOf("OPR") > -1) {
+					sBrowser = "Opera";
+					//"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.106"
+				} else if (sUsrAg.indexOf("Trident") > -1) {
+					sBrowser = "Microsoft IE";
+					// "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Zoom 3.6.0; wbx 1.0.0; rv:11.0) like Gecko"
+				} else if (sUsrAg.indexOf("Edge") > -1) {
+					sBrowser = "Microsoft Edge";
+					// "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299"
+				} else if (sUsrAg.indexOf("Chrome") > -1) {
+					sBrowser = "Google Chrome or Chromium";
+					// "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.181 Chrome/66.0.3359.181 Safari/537.36"
+				} else if (sUsrAg.indexOf("Safari") > -1) {
+					sBrowser = "Apple Safari";
+					// "Mozilla/5.0 (iPhone; CPU iPhone OS 11_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1 980x1306"
+				} else {
+					sBrowser = "unknown";
+				}
+				return sBrowser
+			},
+			//发送监听信息
+			sendListMassage() {
+				var sendObject = this.timeObserve()
+				sendObject.userMassage = this.userIn()
+				var sendJson = qs.stringify(sendObject)
+				let url = axios.defaults.baseURL + '/ListenLog'
+				
+				//发送
+				let img = new Image(1,1)
+				let src = url+'?'+sendJson;	//不能用字符串模板，要用这种形式
+				console.log(src)
+				
+				//发送
+				img.src = src
+			}
 
 		},
 		created() {
@@ -109,6 +187,8 @@
 			this.$store.commit('countAllLabel')
 		},
 		mounted() {
+			//性能监控，延迟\耗时计算
+			this.sendListMassage()
 			//获取初始化
 			this.init()
 			//排序，默認降序
@@ -135,7 +215,6 @@
 				'itemContent',
 				'isNew',
 				'userName',
-				'showCalendarTask'
 			]),
 
 			memoItemData: function() {
@@ -244,10 +323,12 @@
 		margin-right: auto;
 		margin-left: auto;
 	}
-	
+
 	@media (max-width:768px) {
-		.login,.feed_back{
-			width:100%;
+
+		.login,
+		.feed_back {
+			width: 100%;
 			padding: 25px 75px;
 		}
 	}

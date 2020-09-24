@@ -12,7 +12,7 @@ export default new Router({
 	routes: [{
 			path: '/',
 			name: 'Home',
-			component: Home
+			component: Home,
 		},
 		{
 			path: '/memo/qqlogin',
@@ -26,4 +26,5 @@ export default new Router({
 			component: NotFound
 		}
 	]
+	
 })
