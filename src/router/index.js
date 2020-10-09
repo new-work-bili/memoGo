@@ -19,12 +19,12 @@ export default new Router({
 			name: 'qqlogin',
 			component: qqlogin
 		},
-		{
-			// path: '/404/',
-			path: '*',
-			name: '404',
-			component: NotFound
-		}
+		// {
+		// 	// path: '/404/',
+		// 	path: '*',
+		// 	name: '404',
+		// 	component: NotFound
+		// }
 	]
 	
 })

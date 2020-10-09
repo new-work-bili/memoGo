@@ -71,17 +71,6 @@
 						width: 0em;
 					}
 				}
-				@keyframes blink-caret {
-				
-					from,
-					to {
-						border-right: 5px solid transparent;
-					}
-				
-					50% {
-						border-right: 5px solid #333;
-					}
-				}
 				`
 				// 创建style标签
 				const style = document.createElement('style');
@@ -119,10 +108,10 @@
 			tipsStyle: function() {
 				return function(text, index) {
 					var str =
-						`go${index} .5s steps(${this.strLength(text)}, end) forwards  , back${index} .5s steps(${this.strLength(text)}, end) forwards 6s , blink-caret .75s infinite`
-					// var str = `go0 .5s steps(22) forwards, back0 .5s steps(22) forwards 6s , blink-caret .75s infinite`
+						`go${index} .5s steps(${this.strLength(text)}, end) forwards  , back${index} .5s steps(${this.strLength(text)}, end) forwards 6s , blinkCaret 0.75s infinite ease`
+					// var str = `go0 .5s steps(22) forwards, back0 .5s steps(22) forwards 6s , blinkCaret .75s infinite`
 					return {
-						animation: str
+						animation: str,
 					}
 				}
 
@@ -146,6 +135,7 @@
 		text-indent: 15px;
 		height: 1.25em;
 		white-space: nowrap;
+		border-right: 5px solid  transparent;
 		// color: #777;
 	}
 
@@ -161,6 +151,54 @@
 	@media screen and (max-width: 1200px) {
 		.tips {
 			display: none;
+		}
+	}
+
+	// 边框闪动(打印机)动画
+	@keyframes blinkCaret {
+		from,
+		to {
+			border-right: 5px solid transparent;
+		}
+
+		50% {
+			border-right: 5px solid #333;
+		}
+	}
+
+	@-webkit-keyframes blinkCaret {
+
+		from,
+		to {
+			border-right: 5px solid transparent;
+		}
+
+		50% {
+			border-right: 5px solid #333;
+		}
+	}
+
+	@-o-keyframes blinkCaret {
+
+		from,
+		to {
+			border-right: 5px solid transparent;
+		}
+
+		50% {
+			border-right: 5px solid #333;
+		}
+	}
+
+	@-moz-keyframes blinkCaret {
+
+		from,
+		to {
+			border-right: 5px solid transparent;
+		}
+
+		50% {
+			border-right: 5px solid #333;
 		}
 	}
 </style>

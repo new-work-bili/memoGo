@@ -28,6 +28,9 @@
 </template>
 
 <script>
+	window.onload = function(){
+		console.log('load')
+	}
 	import memoEdit from '../components/memoEdit.vue'
 	import memoItem from '../components/memoItem.vue'
 	import Headers from '../components/Header.vue'
@@ -114,12 +117,16 @@
 			timeObserve() {
 				var time = window.performance.timing
 				//白屏时间
-				var whiteTime = time.responseEnd - time.navigationStart
-				//首屏时间
-				var firstTime = time.domContentLoadedEventEnd - time.navigationStart
-				//页面总下载时间
-				var laodTime = time.loadEventEnd - time.navigationStart
-				//DNS解析
+				var whiteTime = time.domLoading - time.navigationStart
+				//首屏时间(所有资源下载完成...)
+				//loadEventEnd 返回当前网页load事件的回调函数运行结束时的时间戳。如果该事件还没有发生，返回0。
+				// var laodTime = time.loadEventEnd - time.navigationStart;
+				//对于vue，直接在对应生命周期获取时间戳就行了
+				var firstTime  = new Date().getTime() - time.navigationStart;
+				
+				//用户等待可操纵时间
+				var waitTime = time.domContentLoadedEventEnd  - time.navigationStart;
+				//DNS解析;
 				var DNSTime = time.domainLookupEnd - time.domainLookupStart
 				//tcp耗时
 				var TCPTime = time.connectEnd - time.connectStart
@@ -127,10 +134,11 @@
 				var timeObject = {
 					whiteTime,
 					firstTime,
-					laodTime,
+					waitTime,
 					DNSTime,
 					TCPTime
 				}
+				console.log(timeObject)
 				return timeObject
 			},
 			//用户设备信息
@@ -187,6 +195,7 @@
 			this.$store.commit('countAllLabel')
 		},
 		mounted() {
+			console.log('mounted')
 			//性能监控，延迟\耗时计算
 			this.sendListMassage()
 			//获取初始化

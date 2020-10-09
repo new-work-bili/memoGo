@@ -66,6 +66,7 @@
 		background-color: black;
 		opacity: 0.65;
 		-webkit-text-fill-color: #fff;
+		color: #fff;
 		animation: move 0.8s cubic-bezier(.21, .35, .9, .48);
 	}
 
