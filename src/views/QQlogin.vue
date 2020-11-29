@@ -28,19 +28,15 @@
 					this.$store.commit('setToken', res.data.token)
 					this.masg = '登陆成功'
 					//处理完数据就可以返回主页了
-					var a = document.createElement('a')
-					a.href = '/'
+					const that = this
 					setTimeout(function() {
-						a.click()
+						that.$router.replace('/')
 					}, 1500)
-
 				}).catch((err) => {
 					//报错也要返回过去
-					var a = document.createElement('a')
 					this.masg = '登陆失败'
-					a.href = '/'
 					setTimeout(function() {
-						a.click()
+						that.$router.replace('/')
 					}, 1500)
 				})
 			}
