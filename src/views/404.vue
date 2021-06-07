@@ -278,13 +278,12 @@
 		components: {
 		},
 		mounted() {
-
 			$(document).on("mousemove", evt => {
 				$(".main")
 					// .css("transform",`translate(${Math.ceil(evt.pageX / 40)}px,${Math.ceil(evt.pageY / 40)}px)`)
 					.css("transform", `translateX(${Math.ceil(evt.pageX / 40)}px)`)
 			});
-		}
+		},
 	}
 </script>
 

@@ -5,7 +5,9 @@ import {
 	Message
 } from 'element-ui'
 // axios.defaults.baseURL = 'http://localhost:3000';
-axios.defaults.baseURL = 'http://123.57.209.85:3000';
+// axios.defaults.baseURL = 'http://123.57.209.85:3000';
+// 换服务器，更改ip
+axios.defaults.baseURL = 'http://47.95.210.21:3000';
 
 axios.interceptors.request.use(
 	config => {
